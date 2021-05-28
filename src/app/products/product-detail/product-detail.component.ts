@@ -1,5 +1,7 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import * as EventEmitter from 'events';
+import { ProductService } from 'src/app/services/product.service';
 import { Product } from '../product.interface';
 
 @Component({
@@ -9,12 +11,23 @@ import { Product } from '../product.interface';
 })
 export class ProductDetailComponent implements OnInit {
 
-  @Input() product: Product;
+  product: Product;
 
-  constructor() {
-  }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private productService: ProductService
+  ) { }
 
   ngOnInit(): void {
+    const id = this.activatedRoute.snapshot.params['id'];
+
+    this
+      .productService
+      .getProductById(id)
+      .subscribe(
+        data => this.product = data
+      )
+
   }
 
 }
